@@ -348,6 +348,7 @@
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\Libraries\CMSIS\Include</state>
                     <state>$PROJ_DIR$\applications</state>
+                    <state>$PROJ_DIR$\..\..\components\finsh</state>
                     <state>$PROJ_DIR$\drivers</state>
                     <state>$PROJ_DIR$\Libraries\CMSIS\Device\ST\STM32F4xx\Include</state>
                     <state>$PROJ_DIR$\.</state>
@@ -356,7 +357,7 @@
                     <state>$PROJ_DIR$\Libraries\STM32F4xx_HAL_Driver\Inc</state>
                     <state>$PROJ_DIR$\..\..\components\drivers\include</state>
                     <state>$PROJ_DIR$\..\..\libcpu\arm\common</state>
-                    <state>$PROJ_DIR$\..\..\components\finsh</state>
+                    <state>$PROJ_DIR$\packages\mpu6xxx-latest\inc</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -1012,7 +1013,7 @@
                 </option>
                 <option>
                     <name>IlinkTrustzoneImportLibraryOut</name>
-                    <state>###Unitialized###</state>
+                    <state>project_import_lib.o</state>
                 </option>
                 <option>
                     <name>OILinkExtraOption</name>
@@ -1395,6 +1396,7 @@
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$\Libraries\CMSIS\Include</state>
                     <state>$PROJ_DIR$\applications</state>
+                    <state>$PROJ_DIR$\..\..\components\finsh</state>
                     <state>$PROJ_DIR$\drivers</state>
                     <state>$PROJ_DIR$\Libraries\CMSIS\Device\ST\STM32F4xx\Include</state>
                     <state>$PROJ_DIR$\.</state>
@@ -1403,7 +1405,7 @@
                     <state>$PROJ_DIR$\Libraries\STM32F4xx_HAL_Driver\Inc</state>
                     <state>$PROJ_DIR$\..\..\components\drivers\include</state>
                     <state>$PROJ_DIR$\..\..\libcpu\arm\common</state>
-                    <state>$PROJ_DIR$\..\..\components\finsh</state>
+                    <state>$PROJ_DIR$\packages\mpu6xxx-latest\inc</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -2099,6 +2101,9 @@
         <file>
             <name>$PROJ_DIR$\applications\main.c</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\applications\sensor_thread.c</name>
+        </file>
     </group>
     <group>
         <name>CMSIS</name>
@@ -2136,6 +2141,15 @@
             <name>$PROJ_DIR$\..\..\components\drivers\src\dataqueue.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\components\drivers\i2c\i2c-bit-ops.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\components\drivers\i2c\i2c_core.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\components\drivers\i2c\i2c_dev.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\components\drivers\misc\pin.c</name>
         </file>
         <file>
@@ -2164,6 +2178,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\drivers\drv_gpio.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\drivers\drv_i2c.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\drivers\drv_led.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\drivers\drv_usart.c</name>
@@ -2242,6 +2262,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\src\timer.c</name>
+        </file>
+    </group>
+    <group>
+        <name>mpu6xxx</name>
+        <file>
+            <name>$PROJ_DIR$\packages\mpu6xxx-latest\src\mpu6xxx.c</name>
         </file>
     </group>
     <group>

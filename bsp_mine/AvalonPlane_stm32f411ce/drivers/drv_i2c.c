@@ -6,92 +6,110 @@
  * Change Logs:
  * Date           Author       Notes
  * 2017-06-05     tanek        first implementation.
- * 2018-03-08     ZYH          Porting for stm32f4xx
  */
-#include <rthw.h>
-#include <rtthread.h>
-#include <rtdevice.h>
+ 
 #include "drv_i2c.h"
+
 #include <board.h>
-/*user can change this*/
-#define I2C_BUS_NAME  "i2c2"
-/*user should change this to adapt specific board*/
-#define I2C_SCL_PIN                 GPIO_PIN_6
-#define I2C_SCL_PORT                GPIOB
-#define I2C_SCL_PORT_CLK_ENABLE     __HAL_RCC_GPIOB_CLK_ENABLE
-#define I2C_SDA_PIN                 GPIO_PIN_7
-#define I2C_SDA_PORT                GPIOB
-#define I2C_SDA_PORT_CLK_ENABLE     __HAL_RCC_GPIOB_CLK_ENABLE
+#include <finsh.h>
+#include <rtdevice.h>
+#include <rthw.h>
 
-static void drv_i2c_gpio_init()
+#define DEBUG
+
+#ifdef DEBUG
+#define DEBUG_PRINTF(...)   rt_kprintf(__VA_ARGS__)
+#else
+#define DEBUG_PRINTF(...)   
+#endif
+
+
+
+#define  SENSOR_I2C_SDA_PIN     GPIO_PIN_9
+#define  SENSOR_I2C_SCL_PIN     GPIO_PIN_8
+
+
+static void stm32f4_i2c_gpio_init()
 {
-    GPIO_InitTypeDef GPIO_Initure;
-    I2C_SCL_PORT_CLK_ENABLE();
-    I2C_SDA_PORT_CLK_ENABLE();
-    GPIO_Initure.Pin = I2C_SCL_PIN;
-    GPIO_Initure.Mode = GPIO_MODE_OUTPUT_OD;
-    GPIO_Initure.Pull = GPIO_PULLUP;
-    GPIO_Initure.Speed = GPIO_SPEED_HIGH;
-    HAL_GPIO_Init(I2C_SCL_PORT, &GPIO_Initure);
-    GPIO_Initure.Pin = I2C_SDA_PIN;
-    GPIO_Initure.Mode = GPIO_MODE_OUTPUT_OD;
-    GPIO_Initure.Pull = GPIO_PULLUP;
-    GPIO_Initure.Speed = GPIO_SPEED_HIGH;
-    HAL_GPIO_Init(I2C_SDA_PORT, &GPIO_Initure);
-    HAL_GPIO_WritePin(I2C_SCL_PORT, I2C_SCL_PIN, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(I2C_SDA_PORT, I2C_SDA_PIN, GPIO_PIN_SET);
+	GPIO_InitTypeDef GPIO_Initure;
+
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+    
+	GPIO_Initure.Pin = SENSOR_I2C_SDA_PIN | SENSOR_I2C_SCL_PIN;
+	GPIO_Initure.Mode = GPIO_MODE_OUTPUT_OD;
+	GPIO_Initure.Pull = GPIO_PULLUP;
+	GPIO_Initure.Speed = GPIO_SPEED_FAST;
+	HAL_GPIO_Init(GPIOB, &GPIO_Initure);
+    
+    HAL_GPIO_WritePin(GPIOB, SENSOR_I2C_SDA_PIN, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOB, SENSOR_I2C_SCL_PIN, GPIO_PIN_SET);
 }
 
-static void drv_set_sda(void *data, rt_int32_t state)
+static void stm32f4_set_sda(void *data, rt_int32_t state)
 {
-    HAL_GPIO_WritePin(I2C_SDA_PORT, I2C_SDA_PIN, state ? GPIO_PIN_SET : GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, SENSOR_I2C_SDA_PIN, (GPIO_PinState)state);
 }
 
-static void drv_set_scl(void *data, rt_int32_t state)
+static void stm32f4_set_scl(void *data, rt_int32_t state)
 {
-    HAL_GPIO_WritePin(I2C_SCL_PORT, I2C_SCL_PIN, state ? GPIO_PIN_SET : GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, SENSOR_I2C_SCL_PIN, (GPIO_PinState)state);
 }
 
-static rt_int32_t  drv_get_sda(void *data)
+static rt_int32_t  stm32f4_get_sda(void *data)
 {
-    return HAL_GPIO_ReadPin(I2C_SDA_PORT, I2C_SDA_PIN) ? 1 : 0;
+	return (rt_int32_t)HAL_GPIO_ReadPin(GPIOB, SENSOR_I2C_SDA_PIN);
 }
 
-static rt_int32_t  drv_get_scl(void *data)
+static rt_int32_t  stm32f4_get_scl(void *data)
 {
-    return HAL_GPIO_ReadPin(I2C_SCL_PORT, I2C_SCL_PIN) ? 1 : 0;
+	return (rt_int32_t)HAL_GPIO_ReadPin(GPIOB, SENSOR_I2C_SCL_PIN);
 }
 
-static void drv_udelay(rt_uint32_t us)
+static void stm32f4_udelay(rt_uint32_t us)
 {
-    __IO uint32_t Delay = us * (SystemCoreClock / 8U / 1000000U);
-    do 
-    {
-        __NOP();
-    } 
-    while (Delay --);
+	rt_int32_t i;
+	for (; us > 0; us--)
+	{
+		i = 50;
+		while (i > 0)
+		{
+			i--;
+		}
+	}
 }
 
-static const struct rt_i2c_bit_ops drv_bit_ops =
-{
-    RT_NULL,
-    drv_set_sda,
-    drv_set_scl,
-    drv_get_sda,
-    drv_get_scl,
-    drv_udelay,
-    1,
-    100
+static const struct rt_i2c_bit_ops bit_ops = {
+	RT_NULL,
+	stm32f4_set_sda,
+	stm32f4_set_scl,
+	stm32f4_get_sda,
+	stm32f4_get_scl,
+
+	stm32f4_udelay,
+
+	5,
+	100
 };
 
-int drv_i2c_init(void)
+int stm32f4_i2c_init(void)
 {
-    static struct rt_i2c_bus_device i2c2_bus;
-    drv_i2c_gpio_init();
-    rt_memset((void *)&i2c2_bus, 0, sizeof(struct rt_i2c_bus_device));
-    i2c2_bus.priv = (void *)&drv_bit_ops;
-    rt_i2c_bit_add_bus(&i2c2_bus, I2C_BUS_NAME);
-    return RT_EOK;
+	struct rt_i2c_bus_device *bus;
+
+	bus = rt_malloc(sizeof(struct rt_i2c_bus_device));
+	if (bus == RT_NULL)
+	{
+		rt_kprintf("rt_malloc failed\n");
+		return -RT_ENOMEM;
+	}
+
+	rt_memset((void *)bus, 0, sizeof(struct rt_i2c_bus_device));
+
+	bus->priv = (void *)&bit_ops;
+
+	stm32f4_i2c_gpio_init();
+
+	rt_i2c_bit_add_bus(bus, "i2c1");
+
+	return RT_EOK;
 }
-INIT_DEVICE_EXPORT(drv_i2c_init);
-/* end of i2c driver */
+INIT_DEVICE_EXPORT(stm32f4_i2c_init);
