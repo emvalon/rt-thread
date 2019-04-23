@@ -28,10 +28,8 @@
 #include <rtthread.h>
 #include <rtdevice.h>
 
-// #define DEBUG_ENABLE
-#define DEBUG_LEVEL         DBG_LOG
-#define DBG_SECTION_NAME    "UART"
-#define DEBUG_COLOR
+#define DBG_TAG    "UART"
+#define DBG_LVL    DBG_INFO
 #include <rtdbg.h>
 
 #ifdef RT_USING_POSIX
