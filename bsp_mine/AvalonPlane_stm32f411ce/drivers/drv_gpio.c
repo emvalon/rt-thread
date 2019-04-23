@@ -10,6 +10,7 @@
 #include <rthw.h>
 #include <rtdevice.h>
 #include <board.h>
+#include "drv_gpio.h"
 #ifdef RT_USING_PIN
 #define __STM32_PIN(index, gpio, gpio_index) (gpio | gpio_index)
 #define __STM32_PIN_DEFAULT 0

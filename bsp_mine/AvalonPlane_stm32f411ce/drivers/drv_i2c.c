@@ -70,7 +70,7 @@ static void stm32f4_udelay(rt_uint32_t us)
 	rt_int32_t i;
 	for (; us > 0; us--)
 	{
-		i = 50;
+		i = 5;
 		while (i > 0)
 		{
 			i--;
