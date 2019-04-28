@@ -1,0 +1,13 @@
+"F:\IAR\arm\bin\armproc.dll" 
+
+"F:\IAR\arm\bin\armsim2.dll" 
+
+"D:\develop\git\rt-thread\bsp_mine\AvalonPlane_stm32f411ce\build\Exe\rtthread.out" 
+
+--plugin="F:\IAR\arm\bin\armbat.dll" 
+
+--device_macro="F:\IAR\arm\config\debugger\ST\STM32F4xx.dmac" 
+
+
+
+
