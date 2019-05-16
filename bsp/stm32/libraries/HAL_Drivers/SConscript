@@ -23,6 +23,9 @@ if GetDepend(['RT_USING_PWM']):
 if GetDepend(['RT_USING_SPI']):
     src += ['drv_spi.c']
 
+if GetDepend(['RT_USING_QSPI' , 'RT_USING_SFUD']):
+    src += ['drv_spi_flash.c']
+
 if GetDepend(['RT_USING_QSPI']):
     src += ['drv_qspi.c']
 

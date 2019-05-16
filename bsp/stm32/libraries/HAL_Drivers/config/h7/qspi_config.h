@@ -24,7 +24,7 @@ extern "C" {
         .Instance = QUADSPI,                                   \
         .Init.FifoThreshold = 4,                               \
         .Init.SampleShifting = QSPI_SAMPLE_SHIFTING_HALFCYCLE, \
-        .Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_4_CYCLE,  \
+        .Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_5_CYCLE,  \
     }
 #endif /* QSPI_BUS_CONFIG */
 #endif /* BSP_USING_QSPI */

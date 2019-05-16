@@ -24,7 +24,20 @@ menu "On-chip Peripheral Drivers"
         bool "Enable GPIO"
         select RT_USING_PIN
         default y
-
+		
+	menuconfig BSP_USING_QSPI
+		bool "Enable QSPI"
+		select RT_USING_QSPI
+		default n
+		
+		if BSP_USING_QSPI
+			config BSP_QSPI_USING_SOFTCS
+			bool "Using Software Pin Control"
+			default y
+		endif
+		
+		
+		
     menuconfig BSP_USING_UART
         bool "Enable UART"
         default y
@@ -36,10 +49,10 @@ menu "On-chip Peripheral Drivers"
 
         endif
 	
-		menuconfig BSP_USING_PWM
-			bool "Enable PWM"
-			default n
-			select RT_USING_PWM
+	menuconfig BSP_USING_PWM
+		bool "Enable PWM"
+		default n
+		select RT_USING_PWM
 		if BSP_USING_PWM
 		menuconfig BSP_USING_PWM3
 			bool "Enable timer3 output pwm"
@@ -50,6 +63,9 @@ menu "On-chip Peripheral Drivers"
 					default n
 			endif
 		endif
+		
+	
+		
 
 endmenu
 
